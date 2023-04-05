@@ -1,4 +1,8 @@
-﻿namespace SyncAsyncAPI
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace SyncAsyncAPI
 {
     public class Restaurant
     {
@@ -10,6 +14,7 @@
             {
                 _tables.Add(new Table(i));
             }
+            Unbooked();
         }
 
         public void BookFreeTable(int countOfPersons)
@@ -74,6 +79,21 @@
                     ? "УВЕДОМЛЕНИЕ: К сожалению, не удалось найти Вашу бронь"
                     : $" УВЕДОМЛЕНИЕ: Готово! Бронь отменена");
             });
+        }
+
+        private void Unbooked()
+        {
+            var timer = new Timer(
+            callback=> {
+                foreach (var t in _tables)
+                {
+                    if (t.State == State.Booked)
+                        t.SetState(State.Free);
+                }
+            },
+            state: null,
+            dueTime: 20000,
+            period: 20000);            
         }
     }
 }
