@@ -11,10 +11,13 @@ namespace SyncAsyncAPI
             while (true)
             {
                 Console.WriteLine("Привет! Желаете забронировать столик?\n1 - мы уведомим Вас по смс (асинхронно)" +
-                    "\n2 - подождите на линии, мы Вас оповестим (синхронно)");
-                if (!int.TryParse(Console.ReadLine(), out var choice) && choice is not (1 or 2))
+                    "\n2 - подождите на линии, мы Вас оповестим (синхронно)" +
+                    "\nЖелаете отменить бронь?" +
+                    "\n3 - мы уведомим Вас по смс (асинхронно)" +
+                    "\n4 - подождите на линии, мы Вас оповестим (синхронно)");
+                if (!int.TryParse(Console.ReadLine(), out var choice) && choice is not (1 or 2 or 3 or 4))
                 {
-                    Console.WriteLine("Введите пожалуйста 1 или 2");
+                    Console.WriteLine("Введите пожалуйста 1, 2, 3 или 4");
                     continue;
                 }
 
@@ -23,6 +26,14 @@ namespace SyncAsyncAPI
                 if (choice == 1) // смс
                 {
                     rest.BookFreeTableAsync(1);
+                }
+                else if(choice == 3)
+                {
+                    rest.UnbookedTable(1);
+                }
+                else if (choice == 4)
+                {
+                    rest.UnbookedTableAsync(1);
                 }
                 else // звонок
                 {

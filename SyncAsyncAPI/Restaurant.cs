@@ -43,5 +43,37 @@
                     : $" УВЕДОМЛЕНИЕ: Готово! Ваш столик номер {table.Id}");
             });
         }
+
+        public void UnbookedTable(int id)
+        {
+            Console.WriteLine("Добрый день! Подождите секунду я найду Вашу бронь и отменю ее, оставайтесь на линии");
+
+            var table = _tables.FirstOrDefault(t => t.Id == id && t.State == State.Booked);
+
+            Thread.Sleep(1000 * 5); // в течение 5 секунд происходит поиск стола
+            table?.SetState(State.Free);
+
+            Console.WriteLine(table is null
+                ? "К сожалению, не удалось найти Вашу бронь"
+                : "Готово! Бронь отменена");
+        }
+
+        public void UnbookedTableAsync(int id)
+        {
+            Console.WriteLine("Добрый день! Подождите секунду я найду Вашу бронь и отменю ее, Вам придет уведомление");
+
+            Task.Run(async () =>
+            {
+                var table = _tables.FirstOrDefault(t => t.Id == id && t.State == State.Booked);
+
+                await Task.Delay(1000 * 5);
+                table?.SetState(State.Free);
+
+
+                Console.WriteLine(table is null
+                    ? "УВЕДОМЛЕНИЕ: К сожалению, не удалось найти Вашу бронь"
+                    : $" УВЕДОМЛЕНИЕ: Готово! Бронь отменена");
+            });
+        }
     }
 }
