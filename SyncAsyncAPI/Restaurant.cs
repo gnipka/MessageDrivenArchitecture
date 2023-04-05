@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace SyncAsyncAPI
+﻿namespace SyncAsyncAPI
 {
     public class Restaurant
     {
@@ -42,10 +38,10 @@ namespace SyncAsyncAPI
                 await Task.Delay(1000 * 5);
                 table?.SetState(State.Booked);
 
-
-                Console.WriteLine(table is null
-                    ? "УВЕДОМЛЕНИЕ: К сожалению, сейчас все столики заняты"
-                    : $" УВЕДОМЛЕНИЕ: Готово! Ваш столик номер {table.Id}");
+                if (table is null)
+                    Message.TableAllBooked();
+                else
+                    Message.TableBooked(table.Id);
             });
         }
 
@@ -84,7 +80,8 @@ namespace SyncAsyncAPI
         private void Unbooked()
         {
             var timer = new Timer(
-            callback=> {
+            callback =>
+            {
                 foreach (var t in _tables)
                 {
                     if (t.State == State.Booked)
@@ -93,7 +90,7 @@ namespace SyncAsyncAPI
             },
             state: null,
             dueTime: 20000,
-            period: 20000);            
+            period: 20000);
         }
     }
 }
